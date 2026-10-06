@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Zirrinn Speech Bubble</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+
+    #bubble {
+      position: absolute;
+      left: 50%;
+      bottom: 8%;
+      transform: translateX(-50%) translateY(20px);
+
+      max-width: 70%;
+      padding: 18px 28px;
+
+      background: white;
+      color: #333;
+
+      border: 4px solid #ff9fcf;
+      border-radius: 28px;
+
+      font-size: 32px;
+      font-weight: bold;
+      text-align: center;
+
+      opacity: 0;
+      transition: all 0.3s ease;
+
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+
+      pointer-events: none;
+    }
+
+    #bubble.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="bubble"></div>
+
+  <script type="module">
+
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+
+    import {
+      getDatabase,
+      ref,
+      onValue
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+
+
+    // =========================
+    // FIREBASE CONFIG
+    // =========================
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAU-e_47OfNngEM1cvzQ6-CX7bk-SI2Gr4",
+      authDomain: "zirrinn-speech-bubble.firebaseapp.com",
+      databaseURL: "https://zirrinn-speech-bubble-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "zirrinn-speech-bubble",
+      storageBucket: "zirrinn-speech-bubble.firebasestorage.app",
+      messagingSenderId: "857601047584",
+      appId: "1:857601047584:web:9ac156dbd9d4cf7f445045"
+    };
+
+
+    // =========================
+    // CONNECT FIREBASE
+    // =========================
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+
+    // =========================
+    // LISTEN FOR BUBBLE
+    // =========================
+
+    const bubbleRef = ref(db, "bubble");
+
+    onValue(bubbleRef, (snapshot) => {
+
+      const data = snapshot.val();
+
+      if (!data || !data.text) return;
+
+      const bubble = document.getElementById("bubble");
+
+      bubble.textContent = data.text;
+
+      bubble.classList.add("show");
+
+      setTimeout(() => {
+        bubble.classList.remove("show");
+      }, 5000);
+
+    });
+
+  </script>
+
+</body>
+</html>
